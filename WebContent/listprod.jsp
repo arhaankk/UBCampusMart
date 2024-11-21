@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOUR NAME Grocery</title>
+    <title>UBCampusMart</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -109,7 +109,7 @@
 
 <header>
     <div style="text-align: center; padding: 20px; background-color: #3b4a67; color: white;">
-        <h2>Welcome to Soumil's Grocery Store</h2>
+        <h2>UBCampusMart</h2>
         <nav>
             <a href="listprod.jsp" style="margin: 10px; color: white; text-decoration: none;">Products</a>
             <a href="listorder.jsp" style="margin: 10px; color: white; text-decoration: none;">Order List</a>
@@ -177,19 +177,21 @@
                 out.println("<p>No products found matching your search.</p>");
             } else {
                 out.println("<div class='product-list'>");
-                do {
+                do {    
                     int productId = rs.getInt("productId");
                     String productName = rs.getString("productName");
                     double productPrice = rs.getDouble("productPrice");
 
                     String formattedPrice = currFormat.format(productPrice);
                     String addToCartLink = "addcart.jsp?id=" + productId + "&name=" + URLEncoder.encode(productName, "UTF-8") + "&price=" + productPrice;
-
                     out.println("<div class='product-card'>");
+                    out.println("<a href='product.jsp?id=" + productId + "' style='text-decoration: none; color: inherit;'>");
                     out.println("<h3>" + productName + "</h3>");
                     out.println("<p>" + formattedPrice + "</p>");
+                    out.println("</a>");
                     out.println("<a href='" + addToCartLink + "' class='add-to-cart'>Add to Cart</a>");
                     out.println("</div>");
+
                 } while (rs.next());
                 out.println("</div>");
             }
