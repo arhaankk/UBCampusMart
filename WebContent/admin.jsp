@@ -134,9 +134,9 @@
         <%
             // SQL query to calculate the total sales for each day
             String sql = "SELECT CONVERT(date, orderDate) AS saleDate, SUM(totalAmount) AS totalSales " +
-                         "FROM ordersummary " +  // Correct table name
+                         "FROM ordersummary " +  
                          "GROUP BY CONVERT(date, orderDate) " +
-                         "ORDER BY saleDate DESC";  // Sort by date descending
+                         "ORDER BY saleDate DESC";  
 
             try {
                 getConnection();  // Open the connection
