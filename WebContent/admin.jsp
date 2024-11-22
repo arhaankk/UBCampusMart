@@ -151,7 +151,7 @@
             } catch (SQLException e) {
                 out.println("<tr><td colspan='2'>Error fetching data: " + e.getMessage() + "</td></tr>");
             } finally {
-                closeConnection();  // Close the connection
+                closeConnection();  
             }
         %>
     </table>

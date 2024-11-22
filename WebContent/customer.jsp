@@ -120,12 +120,12 @@
     }
 
     // SQL query to retrieve customer information by username (assuming username is the customer id)
-    String sql = "SELECT * FROM customer WHERE userid = ?"; // Query to retrieve all customer info
+    String sql = "SELECT * FROM customer WHERE userid = ?"; 
 
     try {
-        getConnection();  // Open the connection
+        getConnection();  
         PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, userName);  // Use the username from session to retrieve customer data
+        ps.setString(1, userName);  
         ResultSet rs = ps.executeQuery();
 
         // Check if a customer record is found and display it
@@ -151,7 +151,7 @@
     } catch (SQLException e) {
         out.println("<p class='error-message'>Error fetching customer data: " + e.getMessage() + "</p>");
     } finally {
-        closeConnection();  // Close the database connection
+        closeConnection();  
     }
 %>
 

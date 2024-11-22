@@ -33,7 +33,6 @@ try
 
 	if (rst.next())
 	{
-		// Copy stream of bytes from database to output stream for JSP/Servlet
 		InputStream istream = rst.getBinaryStream(1);
 		OutputStream ostream = response.getOutputStream();
 
