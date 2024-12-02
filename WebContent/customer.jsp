@@ -1,163 +1,128 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Customer Page</title>
-<!-- Font Awesome CDN for the back button icon -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        color: #333;
-        margin: 0;
-        padding: 0;
-    }
-
-    header {
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        padding: 20px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        position: relative;
-    }
-
-    /* Back Button Styling */
-    .back-btn {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        padding: 10px 15px;
-        background-color: #3498db;
-        color: white;
-        font-size: 18px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .back-btn i {
-        margin-right: 8px; /* Space between icon and text */
-    }
-
-    .back-btn:hover {
-        background-color: #2980b9;
-    }
-
-    h2 {
-        text-align: center;
-        margin-top: 20px;
-        color: #34495e;
-    }
-
-    table {
-        width: 70%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
-    }
-
-    table th, table td {
-        padding: 12px 15px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    table th {
-        background-color: #3498db;
-        color: #fff;
-    }
-
-    table tr:nth-child(even) {
-        background-color: #ecf0f1;
-    }
-
-    table tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    .error-message {
-        color: red;
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .footer {
-        text-align: center;
-        margin-top: 30px;
-        padding: 20px;
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        font-size: 14px;
-    }
-</style>
-</head>
-<body>
-
-<%@ include file="auth.jsp"%>
-<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.io.*, java.sql.*, javax.servlet.http.*, javax.servlet.*"%>
 <%@ include file="jdbc.jsp" %>
-
-<header>
-    <!-- Back Button to redirect to index.jsp -->
-    <button class="back-btn" onclick="window.location.href='index.jsp';">
-        <i class="fas fa-arrow-left"></i>Back
-    </button>
-    Customer Page
-</header>
 
 <%
     // Check if the user is logged in
-    String userName = (String) session.getAttribute("authenticatedUser");
+    String loggedInUser = (String) session.getAttribute("authenticatedUser");
 
-    // If the user is not logged in, display an error message and stop execution
-    if (userName == null) {
-        out.println("<p class='error-message'>You must be logged in to access this page.</p>");
-        return;
-    }
-
-    // SQL query to retrieve customer information by username (assuming username is the customer id)
-    String sql = "SELECT * FROM customer WHERE userid = ?"; 
-
-    try {
-        getConnection();  
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, userName);  
-        ResultSet rs = ps.executeQuery();
-
-        // Check if a customer record is found and display it
-        if (rs.next()) {
-            out.println("<h2>Customer Information</h2>");
-            out.println("<table>");
-            out.println("<tr><th>ID</th><td>" + rs.getString("customerId") + "</td></tr>");
-            out.println("<tr><th>First Name</th><td>" + rs.getString("firstName") + "</td></tr>");
-            out.println("<tr><th>Last Name</th><td>" + rs.getString("lastName") + "</td></tr>");
-            out.println("<tr><th>Email</th><td>" + rs.getString("email") + "</td></tr>");
-            out.println("<tr><th>Phone</th><td>" + rs.getString("phonenum") + "</td></tr>");
-            out.println("<tr><th>Address</th><td>" + rs.getString("address") + "</td></tr>");
-            out.println("<tr><th>City</th><td>" + rs.getString("city") + "</td></tr>");
-            out.println("<tr><th>State</th><td>" + rs.getString("state") + "</td></tr>");
-            out.println("<tr><th>Postal Code</th><td>" + rs.getString("postalCode") + "</td></tr>");
-            out.println("<tr><th>Country</th><td>" + rs.getString("country") + "</td></tr>");
-            out.println("<tr><th>User ID</th><td>" + rs.getString("userid") + "</td></tr>");
-            out.println("</table>");
-        } else {
-            out.println("<p class='error-message'>No customer found with the username: " + userName + "</p>");
-        }
-
-    } catch (SQLException e) {
-        out.println("<p class='error-message'>Error fetching customer data: " + e.getMessage() + "</p>");
-    } finally {
-        closeConnection();  
+    // If the user is not logged in, redirect before anything is rendered
+    if (loggedInUser == null) {
+        response.sendRedirect("login.jsp");
+        return;  // Stop further execution to avoid sending response after redirect
     }
 %>
 
-<div class="footer">
-    &copy; 2024 UBCampusMart. All rights reserved.
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Page</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="text-gray-100">
+
+    <!-- Back Button -->
+    <button 
+        class="absolute top-2 left-4 p-2 text-2xl text-white"
+        onclick="window.location.href='index.jsp';">
+        &#8592;  <!-- Unicode Left Arrow -->
+    </button>
+
+    <!-- Header -->
+    <header class="bg-gray-900 text-white py-6 text-center text-3xl font-bold">
+        Customer Page
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-6 md:px-12 py-4">
+        <%
+            // SQL query to retrieve customer information by username (assuming username is the customer id)
+            String sql = "SELECT * FROM customer WHERE userid = ?"; 
+
+            try {
+                getConnection();  
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setString(1, loggedInUser);  
+                ResultSet rs = ps.executeQuery();
+
+                // If a customer record is found, display it
+                if (rs.next()) {
+                    out.println("<h2 class='text-center text-2xl font-semibold text-white mt-6'>Customer Information</h2>");
+                    out.println("<div class='relative overflow-x-auto shadow-md sm:rounded-lg mx-auto max-w-4xl'>");
+                    out.println("<table class='w-full text-sm text-left text-gray-500 bg-white'>");
+                    out.println("<thead class='text-xs text-white uppercase bg-gray-800'>");
+                    out.println("<tr>");
+                    out.println("<th scope='col' class='px-6 py-3'>Field</th>");
+                    out.println("<th scope='col' class='px-6 py-3'>Value</th>");
+                    out.println("</tr>");
+                    out.println("</thead>");
+                    out.println("<tbody>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "ID" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("customerId") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "First Name" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("firstName") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "Last Name" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("lastName") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "Email" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("email") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "Phone" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("phonenum") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "Address" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("address") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "City" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("city") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "State" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("state") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "Postal Code" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("postalCode") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "Country" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("country") + "</td>");
+                    out.println("</tr>");
+                    out.println("<tr class='bg-white border-b hover:bg-gray-100'>");
+                    out.println("<th scope='row' class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap'>" + "User ID" + "</th>");
+                    out.println("<td class='px-6 py-4'>" + rs.getString("userid") + "</td>");
+                    out.println("</tr>");
+                    out.println("</tbody>");
+                    out.println("</table>");
+                    out.println("</div>");
+                } else {
+                    out.println("<p class='text-center text-red-600 mt-4'>No customer found with the username: " + loggedInUser + "</p>");
+                }
+
+            } catch (SQLException e) {
+                out.println("<p class='text-center text-red-600 mt-4'>Error fetching customer data: " + e.getMessage() + "</p>");
+            } finally {
+                closeConnection();  
+            }
+        %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-4">
+        &copy; 2024 UBCampusMart. All rights reserved.
+    </footer>
 
 </body>
 </html>
