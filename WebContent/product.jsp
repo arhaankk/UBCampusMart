@@ -33,6 +33,17 @@
             font-size: 18px;
             color: #7f8c8d;
         }
+        .product-info .description {
+            font-size: 20px;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .product-info .price {
+            font-size: 24px;
+            color: red;
+            font-weight: bold;
+        }
         .buttons {
             margin-top: 20px;
         }
@@ -62,8 +73,8 @@
             out.println("<p>Invalid product. Please go back to the product list.</p>");
         } else {
             try {
-                // SQL query to get product details including productImage
-                String sql = "SELECT productName, productPrice, productImageURL, productImage FROM product WHERE productId = ?";
+                // SQL query to get product details including productDesc and productImage
+                String sql = "SELECT productName, productPrice, productDesc, productImageURL, productImage FROM product WHERE productId = ?";
                 try (Connection con = DriverManager.getConnection(url, uid, pw);
                      PreparedStatement ps = con.prepareStatement(sql)) {
                     ps.setInt(1, Integer.parseInt(productId));
@@ -72,6 +83,7 @@
                             // Fetch product details
                             String productName = rs.getString("productName");
                             double productPrice = rs.getDouble("productPrice");
+                            String productDesc = rs.getString("productDesc");
                             String productImageURL = rs.getString("productImageURL");
                             byte[] productImage = rs.getBytes("productImage");
 
@@ -95,13 +107,14 @@
                                 imageTag2 = "<img src='" + productImageURL + "' alt='" + productName + "'>";
                             } 
 
-                            // Display product details with both images
+                            // Display product details with images and description
                             out.println("<div class='product-details'>");
                             out.println("<div class='product-image'>" + imageTag1 + "</div>");
                             out.println("<div class='product-image'>" + imageTag2 + "</div>");
                             out.println("<div class='product-info'>");
                             out.println("<h1>" + productName + "</h1>");
-                            out.println("<p>Price: " + formattedPrice + "</p>");
+                            out.println("<p class='description'><strong>Description:</strong> " + productDesc + "</p>");
+                            out.println("<p class='price'><strong>Price:</strong> " + formattedPrice + "</p>");
                             out.println("<div class='buttons'>");
                             out.println("<a href='addcart.jsp?id=" + productId + "&name=" + productName + "&price=" + productPrice + "'>Add to Cart</a>");
                             out.println("<a href='listprod.jsp'>Continue Shopping</a>");
