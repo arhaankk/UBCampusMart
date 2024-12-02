@@ -26,7 +26,7 @@ UBCampusMart is an e-commerce platform designed for UBC students to buy and sell
 3. **Start the server**
     ```bash
     localhost/shop/index.jsp
-
+ Enjoy Shopping 🛍️
 ## Contributors
 - Arhaan Khaku 
 - Soumil Chhabra
