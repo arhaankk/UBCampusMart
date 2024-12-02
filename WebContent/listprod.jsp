@@ -103,7 +103,6 @@
         background-color: #2980b9;
     }
     </style>
-
 </head>
 <body>
 
@@ -115,6 +114,21 @@
             <a href="listorder.jsp" style="margin: 10px; color: white; text-decoration: none;">Order List</a>
             <a href="showcart.jsp" style="margin: 10px; color: white; text-decoration: none;">Shopping Cart</a>
         </nav>
+    </div>
+    <div style="position: absolute; top: 20px; right: 20px; color: white;">
+        <% 
+            // Check if the user is logged in
+            String username = (String) session.getAttribute("authenticatedUser");
+            if (username != null) {
+        %>
+            <span>Welcome, <%= username %>!</span>
+        <% 
+            } else {
+        %>
+            <a href="login.jsp" style="color: white; text-decoration: none; background-color: #3498db; padding: 10px 15px; border-radius: 4px;">Login</a>
+        <% 
+            }
+        %>
     </div>
 </header>
 
