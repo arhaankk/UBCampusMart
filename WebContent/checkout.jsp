@@ -1,3 +1,7 @@
+<%@ page import="java.sql.*" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8" %>
+<%@ include file="jdbc.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,24 +48,83 @@
     </nav>
 
     <div class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full bg-slate-900 p-8 rounded-lg shadow-lg">
-            <h1 class="text-3xl font-semibold text-center text-white mb-6">Complete Your Transaction</h1>
-            
-            <p class="text-lg text-center text-white mb-6">Please enter your customer ID to proceed with your order.</p>
+    <div class="max-w-md w-full bg-slate-900 p-8 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-semibold text-center text-white mb-6">Checkout</h1>
+        
+        <%
+            String defaultAddress = "";
+            Connection con = null;
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
 
-            <!-- Form -->
-            <form method="get" action="order.jsp" class="space-y-4">
-                <div>
-                    <label for="customerId" class="block text-sm font-medium text-white">Customer ID</label>
-                    <input type="text" name="customerId" id="customerId" size="50" class="w-full px-4 py-2 border border-white rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-                </div>
+            try {
+                con = DriverManager.getConnection(url, uid, pw);
 
-                <div class="flex justify-center">
-                    <input type="submit" value="Submit" class="w-1/2 bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                </div>
-            </form>
+                // Retrieve the default address for the customer
+                stmt = con.prepareStatement("SELECT address FROM customer WHERE userid = ?");
+                stmt.setString(1, username);
+                rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    defaultAddress = rs.getString("address");
+                }
+            } catch (SQLException e) {
+                out.println("<p class='text-red-600'>Error fetching address: " + e.getMessage() + "</p>");
+            } finally {
+                try {
+                    if (rs != null) rs.close();
+                    if (stmt != null) stmt.close();
+                } catch (SQLException e) {
+                    out.println("<p class='text-red-600'>Error closing resources: " + e.getMessage() + "</p>");
+                }
+            }
+        %>
+
+        <!-- Default Address Display -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold text-white">Default Shipping Address</h2>
+            <p class="text-white mt-2"><%= defaultAddress %></p>
         </div>
-    </div>
 
+        <!-- Shipping Address Form -->
+<div class="p-4 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-4">Shipping Information</h2>
+    <form action="order.jsp" method="POST">
+        <!-- Existing Shipping Address fields -->
+        <div class="mb-4">
+            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+            <input type="text" id="address" name="address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Street Address">
+        </div>
+        
+        <!-- New fields for City, State, Postal Code, and Country -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                <input type="text" id="city" name="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="City">
+            </div>
+            <div>
+                <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+                <input type="text" id="state" name="state" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="State">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="postalcode" class="block text-sm font-medium text-gray-700">Postal Code</label>
+                <input type="text" id="postalcode" name="postalcode" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Postal Code">
+            </div>
+            <div>
+                <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                <input type="text" id="country" name="country" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Country">
+            </div>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="mt-4 bg-blue-500 text-white p-2 rounded-md w-full">Proceed to Order</button>
+    </form>
+</div>
+
+    </div>
+    </div>
 </body>
 </html>

@@ -35,7 +35,7 @@
                         <a href="listprod.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Products</a>
                     </li>
                     <li>
-                        <a href="listorder.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Order List</a>
+                        <a href="listorder.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Order History</a>
                     </li>
                     <li>
                         <a href="showcart.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Shopping Cart</a>
@@ -55,31 +55,33 @@
     <!-- Navbar ends here -->
 
 <% 
-    // Get customer id from the request
-    String custId = request.getParameter("customerId");
-    String loggedInCustomerId = (String) session.getAttribute("loggedInCustomerId");
+    // Retrieve address information from the request
+    String address = request.getParameter("address");
+    String city = request.getParameter("city");
+    String state = request.getParameter("state");
+    String postalCode = request.getParameter("postalcode");
+    String country = request.getParameter("country");
     Connection con = null;
     PreparedStatement stmt = null;
     ResultSet rs = null;
     String errorMessage = "";
     boolean isValidCustomer = false;
+    int customerId = -1;  // Initialize a variable to hold the customer ID
 
-    
 
-    // Check if customer id is valid and exists in database
-    if (custId != null && !custId.isEmpty()) {
+ if (username != null) {
         try {
             con = DriverManager.getConnection(url, uid, pw);
 
-            // Check if the customer id exists in the database
-            stmt = con.prepareStatement("SELECT customerId FROM customer WHERE customerId = ? AND userid = ?");
-            stmt.setInt(1, Integer.parseInt(custId));
-            stmt.setString(2, username);
+            // Get the customerId based on the logged-in username
+            stmt = con.prepareStatement("SELECT customerId FROM customer WHERE userid = ?");
+            stmt.setString(1, username);  // Use the username to fetch the customerId
             rs = stmt.executeQuery();
             if (rs.next()) {
-                isValidCustomer = true;
+                customerId = rs.getInt("customerId");
+                isValidCustomer = true;  // Set to true if the customerId is found
             } else {
-                errorMessage = "Invalid Customer ID";
+                errorMessage = "Customer not found!";
             }
         } catch (SQLException e) {
             errorMessage = "Database connection error: " + e.getMessage();
@@ -92,7 +94,7 @@
             }
         }
     } else {
-        errorMessage = "Please enter a valid Customer ID.";
+        errorMessage = "Please log in first.";
     }
 
     // Handle empty cart condition
@@ -110,10 +112,22 @@
             con.setAutoCommit(false);
 
             // Insert order summary into ordersummary table
+            if(address==null){
             String insertOrderSQL = "INSERT INTO ordersummary (orderDate, customerId) VALUES (GETDATE(), ?)";
             stmt = con.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, Integer.parseInt(custId));
+            stmt.setInt(1, customerId);
             stmt.executeUpdate();
+            }else{
+            String insertOrderSQL = "INSERT INTO ordersummary (orderDate, customerId, shiptoAddress, shiptoCity, shiptoState, shiptoPostalCode, shiptoCountry) VALUES (GETDATE(), ?, ?, ?, ?, ?, ?)";
+            stmt = con.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1, customerId);
+            stmt.setString(2, address);
+            stmt.setString(3, city);
+            stmt.setString(4, state);
+            stmt.setString(5, postalCode);
+            stmt.setString(6, country);
+            stmt.executeUpdate();
+            }
 
             // Get the generated orderId
             rs = stmt.getGeneratedKeys();
@@ -155,36 +169,48 @@
             // Commit the transaction
             con.commit();
             session.removeAttribute("productList");
-            // Display the order summary
-            out.println("<div class='max-w-xs mx-auto bg-white p-4 rounded-lg shadow-lg mt-8'>");
-            out.println("<div class='text-center pb-4'>");
-            out.println("<h3 class='text-lg font-semibold'>UBCampusMart</h3>");
-            out.println("<p class='text-sm text-gray-500'>Order Summary</p>");
-            out.println("<div class='py-4 text-xs text-gray-600'>");
-            out.println("<p><strong>Order ID:</strong> #" + orderId + "</p>");
-            out.println("<p><strong>Customer:</strong> "+username+"</p>");
-            out.println("</div>");
+           // Display the order summary
+out.println("<div class='max-w-xs mx-auto bg-white p-4 rounded-lg shadow-lg mt-8'>");
+out.println("<div class='text-center pb-4'>");
+out.println("<h3 class='text-lg font-semibold'>UBCampusMart</h3>");
+out.println("<p class='text-sm text-gray-500'>Order Summary</p>");
+out.println("<div class='py-4 text-xs text-gray-600'>");
+out.println("<p><strong>Order ID:</strong> #" + orderId + "</p>");
+out.println("<p><strong>Customer:</strong> " + username + "</p>");
 
-            out.println("<table class='w-full text-xs border-t border-b border-gray-300 py-2'>");
-            out.println("<thead><tr class='flex'><th class='flex-1'>Product</th><th class='w-16 text-right'>QTY</th><th class='w-16 text-right'>Total</th></tr></thead>");
-            out.println("<tbody>");
-            iterator = productList.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, ArrayList<Object>> entry = iterator.next();
-                ArrayList<Object> product = (ArrayList<Object>) entry.getValue();
-                String productName = (String) product.get(1);
-                int qty = ((Integer) product.get(3)).intValue();
-                String price = (String) product.get(2);
-                out.println("<tr class='flex'><td class='flex-1 py-2'>" + productName + "</td><td class='text-right'>" + qty + "</td><td class='text-right'>$" + price + "</td></tr>");
-            }
-            out.println("</tbody>");
-            out.println("</table>");
-            out.println("<div class='text-center pt-4 text-xs'>");
-            out.println("<p><strong>Total Amount:</strong> $" + totalAmount + "</p>");
-            out.println("<p>Thank you for your order!</p>");
-            out.println("<p>Your cart has been cleared 🛒</p>");
-            out.println("</div>");
-            out.println("</div>");
+// Display shipping address
+if (address != null && !address.isEmpty()) {
+    out.println("<p><strong>Shipping Address:</strong></p>");
+    out.println("<p>" + address + "</p>");
+    out.println("<p>" + city + ", " + state + "</p>");
+    out.println("<p>" + postalCode + ", " + country + "</p>");
+}else{
+    out.println("<p><strong>Shipped to the default address!</strong></p>");
+}
+
+out.println("</div>");
+
+out.println("<table class='w-full text-xs border-t border-b border-gray-300 py-2'>");
+out.println("<thead><tr class='flex'><th class='flex-1'>Product</th><th class='w-16 text-right'>QTY</th><th class='w-16 text-right'>Total</th></tr></thead>");
+out.println("<tbody>");
+iterator = productList.entrySet().iterator();
+while (iterator.hasNext()) {
+    Map.Entry<String, ArrayList<Object>> entry = iterator.next();
+    ArrayList<Object> product = (ArrayList<Object>) entry.getValue();
+    String productName = (String) product.get(1);
+    int qty = ((Integer) product.get(3)).intValue();
+    String price = (String) product.get(2);
+    out.println("<tr class='flex'><td class='flex-1 py-2'>" + productName + "</td><td class='text-right'>" + qty + "</td><td class='text-right'>$" + price + "</td></tr>");
+}
+out.println("</tbody>");
+out.println("</table>");
+
+out.println("<div class='text-center pt-4 text-xs'>");
+out.println("<p><strong>Total Amount:</strong> $" + totalAmount + "</p>");
+out.println("<p>Thank you for your order!</p>");
+out.println("<p>Your cart has been cleared 🛒</p>");
+out.println("</div>");
+out.println("</div>");
         } catch (SQLException e) {
             out.println("<h3 class='text-center text-red-600'>Database error: " + e.getMessage() + "</h3>");
             try {

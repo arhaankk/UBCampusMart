@@ -14,7 +14,7 @@
 
     // Redirect to the appropriate page based on the login status
     if (authenticatedUser != null) {
-        response.sendRedirect("index.jsp");  // Successful login, redirect to the main page
+        response.sendRedirect("listprod.jsp");  // Successful login, redirect to the main page
     } else {
         response.sendRedirect("login.jsp");  // Failed login, redirect back to the login page
     }
