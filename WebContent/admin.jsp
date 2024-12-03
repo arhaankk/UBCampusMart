@@ -25,66 +25,112 @@
 <body class="bg-gray-50 text-gray-900">
 
     <!-- Back Button -->
-  <button 
-    class="absolute top-2 left-4 p-4 text-white text-3xl"
-    onclick="window.location.href='index.jsp';">
-    &#8592;  <!-- Unicode Left Arrow -->
+    <button 
+        class="absolute top-2 left-4 p-4 text-white text-3xl"
+        onclick="window.location.href='index.jsp';">
+        &#8592;  <!-- Unicode Left Arrow -->
     </button>
 
     <!-- Header -->
     <header class="bg-gray-900 text-white py-6 text-center text-xl font-bold">
-        Administrator Sales Report
+        Administrator Hub
     </header>
 
     <!-- Main Content -->
     <main class="px-4">
         <h2 class="text-center text-2xl font-semibold text-gray-900 mt-6">
-            Sales Report by Day
+            Sales Report and Customer List
         </h2>
-        
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg my-8 mx-auto max-w-4xl">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-white">
-                            Order Date
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-white">
-                            Total Order Amount
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        // SQL query to calculate the total sales for each day
-                        String sql = "SELECT CONVERT(date, orderDate) AS saleDate, SUM(totalAmount) AS totalSales " +
-                                     "FROM ordersummary " +  
-                                     "GROUP BY CONVERT(date, orderDate) " +
-                                     "ORDER BY saleDate DESC";  
 
-                        try {
-                            getConnection();  // Open the connection
-                            PreparedStatement ps = con.prepareStatement(sql);
-                            ResultSet rs = ps.executeQuery();
+        <!-- Responsive Container for Side-by-Side Tables -->
+        <div class="flex flex-wrap justify-center gap-8 my-8">
+            <!-- Sales Report Table -->
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg max-w-md bg-gray-800">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-white">
+                                Order Date
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-white">
+                                Total Order Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            String salesSql = "SELECT CONVERT(date, orderDate) AS saleDate, SUM(totalAmount) AS totalSales " +
+                                              "FROM ordersummary " +  
+                                              "GROUP BY CONVERT(date, orderDate) " +
+                                              "ORDER BY saleDate DESC";  
 
-                            while (rs.next()) {
-                                String saleDate = rs.getString("saleDate");
-                                double totalSales = rs.getDouble("totalSales");
-                                out.println(
-                                    "<tr class='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>" +
-                                        "<td class='px-6 py-4 text-white'>" + saleDate + "</td>" +
-                                        "<td class='px-6 py-4 text-white'>" + totalSales + "</td>" +
-                                    "</tr>"
-                                );
+                            try {
+                                getConnection();  // Open the connection
+                                PreparedStatement ps = con.prepareStatement(salesSql);
+                                ResultSet rs = ps.executeQuery();
+
+                                while (rs.next()) {
+                                    String saleDate = rs.getString("saleDate");
+                                    double totalSales = rs.getDouble("totalSales");
+                                    out.println(
+                                        "<tr class='bg-gray-900 border-b dark:bg-gray-800 dark:border-gray-700'>" +
+                                            "<td class='px-6 py-4 text-white'>" + saleDate + "</td>" +
+                                            "<td class='px-6 py-4 text-white'>" + totalSales + "</td>" +
+                                        "</tr>"
+                                    );
+                                }
+                            } catch (SQLException e) {
+                                out.println("<tr><td colspan='2' class='px-6 py-4 text-red-600'>Error fetching data: " + e.getMessage() + "</td></tr>");
+                            } finally {
+                                closeConnection();  
                             }
-                        } catch (SQLException e) {
-                            out.println("<tr><td colspan='2' class='px-6 py-4 text-red-600'>Error fetching data: " + e.getMessage() + "</td></tr>");
-                        } finally {
-                            closeConnection();  
-                        }
-                    %>
-                </tbody>
-            </table>
+                        %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Customer List Table -->
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg max-w-md">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-white">
+                                Customer Name
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-white">
+                                Email
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            String customersSql = "SELECT firstName, lastName, email FROM customer ORDER BY firstName ASC";  
+
+                            try {
+                                getConnection();  // Open the connection
+                                PreparedStatement ps = con.prepareStatement(customersSql);
+                                ResultSet rs = ps.executeQuery();
+
+                                while (rs.next()) {
+                                    String firstName = rs.getString("firstName");
+                                    String lastName = rs.getString("lastName");
+                                    String email = rs.getString("email");
+                                    out.println(
+                                        "<tr class='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>" +
+                                            "<td class='px-6 py-4 text-white'>" + firstName + " "+lastName + "</td>" +
+                                            "<td class='px-6 py-4 text-white'>" + email + "</td>" +
+                                        "</tr>"
+                                    );
+                                }
+                            } catch (SQLException e) {
+                                out.println("<tr><td colspan='2' class='px-6 py-4 text-red-600'>Error fetching data: " + e.getMessage() + "</td></tr>");
+                            } finally {
+                                closeConnection();  
+                            }
+                        %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 

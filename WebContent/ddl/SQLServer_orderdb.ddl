@@ -157,7 +157,7 @@ INSERT INTO category(categoryName) VALUES ('Smart Watch');
 
 -- Insert products (electronics)
 INSERT INTO product(productName, categoryId, productDesc, productPrice) VALUES ('Sony PlayStation 4 Pro', 7, 'Comes with DUALSHOCK 4 controller and 9 games', 250.00);
-INSERT INTO product(productName, categoryId, productDesc, productPrice) VALUES ('Samsung 42" 4K UHD Smart TV', 1, '4K UHD 120Hz display with Dolby Audio speakers', 140.00);
+INSERT INTO product(productName, categoryId, productDesc, productPrice) VALUES ('Samsung 42" 4K Smart TV', 1, '4K UHD 120Hz display with Dolby Audio speakers', 140.00);
 INSERT INTO product(productName, categoryId, productDesc, productPrice) VALUES ('IKEA Table Lamp', 8, 'Glossy black finish. Barely used.', 10.00);
 INSERT INTO product(productName, categoryId, productDesc, productPrice) VALUES ('Apple iPhone 15', 6, 'Dynamic Island, 48MP camera and USB-C charging', 890.00);
 INSERT INTO product(productName, categoryId, productDesc, productPrice) VALUES ('LG 55" 4K UHD Smart TV ', 1, 'HDR10 Pro screen with TM120 Refresh Rate', 250.00);
@@ -191,11 +191,11 @@ INSERT INTO customer (firstName, lastName, email, phonenum, address, city, state
 
 -- Order 1 can be shipped as have enough inventory
 DECLARE @orderId int
-INSERT INTO ordersummary (customerId, orderDate, totalAmount) VALUES (1, '2019-10-15 10:25:55', 91.70)
+INSERT INTO ordersummary (customerId, orderDate, totalAmount) VALUES (1, '2019-10-15 10:25:55', 540.00)
 SELECT @orderId = @@IDENTITY
-INSERT INTO orderproduct (orderId, productId, quantity, price) VALUES (@orderId, 1, 1, 18)
-INSERT INTO orderproduct (orderId, productId, quantity, price) VALUES (@orderId, 5, 2, 21.35)
-INSERT INTO orderproduct (orderId, productId, quantity, price) VALUES (@orderId, 10, 1, 31);
+INSERT INTO orderproduct (orderId, productId, quantity, price) VALUES (@orderId, 1, 1, 250)
+INSERT INTO orderproduct (orderId, productId, quantity, price) VALUES (@orderId, 5, 2, 250)
+INSERT INTO orderproduct (orderId, productId, quantity, price) VALUES (@orderId, 10, 1, 40);
 
 INSERT INTO ordersummary (customerId, orderDate, totalAmount) VALUES (2, '2019-10-16 18:00:00', 106.75)
 SELECT @orderId = @@IDENTITY
