@@ -4,13 +4,56 @@
 <%
     // Check if the user is logged in
     String loggedInUser = (String) session.getAttribute("authenticatedUser");
-    
-    // If the user is not logged in, redirect before anything is rendered
+
+    // If the user is not logged in, redirect to the login page
     if (loggedInUser == null) {
         response.sendRedirect("login.jsp");
         return;  // Stop further execution to avoid sending response after redirect
     }
+
+    // Database connection and query
+    String isAdmin = null;
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs1 = null;
+
+    try {
+        // Ensure consistent variable name (conn) in the try-with-resources block
+        conn = DriverManager.getConnection(url, uid, pw);
+        String sql = "SELECT isAdmin FROM customer WHERE userid = ?";
+        stmt = conn.prepareStatement(sql);
+        stmt.setString(1, loggedInUser);
+        rs1 = stmt.executeQuery();
+        // Check if user exists and fetch their role
+        if (rs1.next()) {
+            isAdmin = rs1.getString("isAdmin");
+        }
+
+        // If no role found or the user is not an admin, redirect
+        if (isAdmin == null || isAdmin.equalsIgnoreCase("False")) {
+            response.sendRedirect("index.jsp");
+            return;  // Stop further execution if the user is not an admin
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Handle database errors
+        out.println("<p>isAdmin: " + isAdmin + "</p>");
+        // response.sendRedirect("error.jsp");
+        return;
+    } finally {
+        // Close resources
+        try {
+            if (rs1 != null) rs1.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 %>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
