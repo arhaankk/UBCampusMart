@@ -74,7 +74,7 @@
 
                     <!-- Register Link -->
                     <p class="text-sm !mt-8 text-center text-gray-800">Don't have an account 
-                        <a href="javascript:void(0);" class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a>
+                        <a href="register.jsp" class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a>
                     </p>
                 </form>
             </div>

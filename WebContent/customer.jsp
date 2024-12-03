@@ -27,7 +27,7 @@
     <!-- Back Button -->
     <button 
         class="absolute top-2 left-4 p-2 text-2xl text-white"
-        onclick="window.location.href='index.jsp';">
+        onclick="window.location.href='listprod.jsp';">
         &#8592;  <!-- Unicode Left Arrow -->
     </button>
 
