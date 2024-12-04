@@ -1,4 +1,4 @@
-<%@ page import="java.sql.*, java.text.NumberFormat" %>
+<%@ page import="java.sql.*, java.net.URLEncoder, java.text.NumberFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8" %>
 <%@ include file="jdbc.jsp" %>
 
@@ -86,66 +86,70 @@
         </div>
     </form>
 
-    <!-- Product List -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        <% 
-            String name = request.getParameter("productName");
-            String categoryId = request.getParameter("categoryId");
+   <!-- Product List -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <% 
+        String name = request.getParameter("productName");
+        String categoryId = request.getParameter("categoryId");
 
-            String query = "SELECT productId, productName, productPrice, productImageURL, productImage FROM product WHERE productName LIKE ?";
+        String query = "SELECT productId, productName, productPrice, productImageURL, productImage FROM product WHERE productName LIKE ?";
+        if (categoryId != null && !categoryId.isEmpty()) {
+            query += " AND categoryId = ?";
+        }
+
+        NumberFormat currFormat = NumberFormat.getCurrencyInstance();
+
+        try (Connection con = DriverManager.getConnection(url, uid, pw);
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, "%" + (name != null ? name : "") + "%");
             if (categoryId != null && !categoryId.isEmpty()) {
-                query += " AND categoryId = ?";
+                ps.setInt(2, Integer.parseInt(categoryId));
             }
 
-            NumberFormat currFormat = NumberFormat.getCurrencyInstance();
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    out.println("<p>No products found matching your search.</p>");
+                } else {
+                    do {
+                        int productId = rs.getInt("productId");
+                        String productName = rs.getString("productName");
+                        double productPrice = rs.getDouble("productPrice");
+                        String productImageURL = rs.getString("productImageURL");
+                        byte[] productImage = rs.getBytes("productImage");
+                        String addToCartLink = "addcart.jsp?id=" + productId + "&name=" + URLEncoder.encode(productName, "UTF-8") + "&price=" + productPrice;
 
-            try (Connection con = DriverManager.getConnection(url, uid, pw);
-                 PreparedStatement ps = con.prepareStatement(query)) {
+                        String imageTag = (productImage != null && productImage.length > 0)
+                            ? "<img src='data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(productImage) + "' alt='" + productName + "' class='w-full h-72 object-cover rounded-lg'>"
+                            : (productImageURL != null && !productImageURL.isEmpty())
+                                ? "<img src='" + productImageURL + "' alt='" + productName + "' class='w-full h-72 object-cover rounded-lg'>"
+                                : "<img src='images/default.jpg' alt='Default Image' class='w-full h-72 object-cover rounded-lg'>";
 
-                ps.setString(1, "%" + (name != null ? name : "") + "%");
-                if (categoryId != null && !categoryId.isEmpty()) {
-                    ps.setInt(2, Integer.parseInt(categoryId));
+                        String formattedPrice = currFormat.format(productPrice);
+                        String productLink = "product.jsp?id=" + productId;
+
+                        out.println("<a href='" + productLink + "' class='group block'>");
+                        out.println("<div class='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full'>");
+                        out.println(imageTag);
+                        out.println("<div class='p-4 flex-grow'>");
+                        out.println("<h3 class='text-lg font-medium text-gray-900'>" + productName + "</h3>");
+                        out.println("<p class='text-xl font-semibold text-gray-700'>" + formattedPrice + "</p>");
+                        // Enhanced Add to Cart Button
+                        out.println("<a href='" + addToCartLink + "' class='bg-blue-500 text-white px-4 py-2 mt-4 inline-block rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200'>Add to Cart</a>");
+                        out.println("</div>");
+                        out.println("</div>");
+                        out.println("</a>");
+                    } while (rs.next());
                 }
-
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (!rs.next()) {
-                        out.println("<p>No products found matching your search.</p>");
-                    } else {
-                        do {
-                            int productId = rs.getInt("productId");
-                            String productName = rs.getString("productName");
-                            double productPrice = rs.getDouble("productPrice");
-                            String productImageURL = rs.getString("productImageURL");
-                            byte[] productImage = rs.getBytes("productImage");
-
-                            String imageTag = (productImage != null && productImage.length > 0)
-                                ? "<img src='data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(productImage) + "' alt='" + productName + "' class='w-full h-72 object-cover rounded-lg'>"
-                                : (productImageURL != null && !productImageURL.isEmpty())
-                                    ? "<img src='" + productImageURL + "' alt='" + productName + "' class='w-full h-72 object-cover rounded-lg'>"
-                                    : "<img src='images/default.jpg' alt='Default Image' class='w-full h-72 object-cover rounded-lg'>";
-
-                            String formattedPrice = currFormat.format(productPrice);
-                            String productLink = "product.jsp?id=" + productId;
-                            
-
-                            out.println("<a href='" + productLink + "' class='group block'>");
-                            out.println("<div class='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl'>");
-                            out.println(imageTag);
-                            out.println("<div class='p-4'>");
-                            out.println("<h3 class='text-lg font-medium text-gray-900'>" + productName + "</h3>");
-                            out.println("<p class='text-xl font-semibold text-gray-700'>" + formattedPrice + "</p>");
-                            out.println("</div>");
-                            out.println("</div>");
-                            out.println("</a>");
-                        } while (rs.next());
-                    }
-                }
-            } catch (SQLException e) {
-                out.print("<p>Error: " + e.getMessage() + "</p>");
             }
-        %>
-    </div>
+        } catch (SQLException e) {
+            out.print("<p>Error: " + e.getMessage() + "</p>");
+        }
+    %>
 </div>
+
+</div>
+
 
 </body>
 </html>
