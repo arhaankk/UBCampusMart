@@ -87,6 +87,7 @@
     </form>
 
    <!-- Product List -->
+<!-- Product List -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
     <% 
         String name = request.getParameter("productName");
@@ -109,7 +110,7 @@
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
-                    out.println("<p>No products found matching your search.</p>");
+                    out.println("<p class='text-center text-gray-500'>No products found matching your search.</p>");
                 } else {
                     do {
                         int productId = rs.getInt("productId");
@@ -120,10 +121,10 @@
                         String addToCartLink = "addcart.jsp?id=" + productId + "&name=" + URLEncoder.encode(productName, "UTF-8") + "&price=" + productPrice;
 
                         String imageTag = (productImage != null && productImage.length > 0)
-                            ? "<img src='data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(productImage) + "' alt='" + productName + "' class='w-full h-72 object-cover rounded-lg'>"
+                            ? "<img src='data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(productImage) + "' alt='" + productName + "' class='w-full h-64 object-cover rounded-lg'>"
                             : (productImageURL != null && !productImageURL.isEmpty())
-                                ? "<img src='" + productImageURL + "' alt='" + productName + "' class='w-full h-72 object-cover rounded-lg'>"
-                                : "<img src='images/default.jpg' alt='Default Image' class='w-full h-72 object-cover rounded-lg'>";
+                                ? "<img src='" + productImageURL + "' alt='" + productName + "' class='w-full h-64 object-cover rounded-lg'>"
+                                : "<img src='images/default.jpg' alt='Default Image' class='w-full h-64 object-cover rounded-lg'>";
 
                         String formattedPrice = currFormat.format(productPrice);
                         String productLink = "product.jsp?id=" + productId;
@@ -143,10 +144,12 @@
                 }
             }
         } catch (SQLException e) {
-            out.print("<p>Error: " + e.getMessage() + "</p>");
+            out.print("<p class='text-red-500 text-center'>Error: " + e.getMessage() + "</p>");
         }
     %>
 </div>
+
+
 
 </div>
 

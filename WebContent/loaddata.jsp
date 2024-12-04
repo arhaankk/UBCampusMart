@@ -10,8 +10,15 @@
     <title>Loading Data</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-white text-gray-900 font-sans">
+
+    <!-- Back Button -->
+    <a href="admin.jsp" class="absolute top-4 left-4 bg-slate-900 text-white p-2 rounded-full shadow-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600">
+        <i class="fas fa-arrow-left"></i> <!-- Font Awesome Back Arrow Icon -->
+    </a>
 
     <!-- Navbar Placeholder -->
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
@@ -27,23 +34,6 @@
             </button>
             <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                 <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                    <!-- Other menu items -->
-                    <li>
-                        <a href="listprod.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Products</a>
-                    </li>
-                    <li>
-                        <a href="listorder.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Order History</a>
-                    </li>
-                    <li>
-                        <a href="showcart.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Shopping Cart</a>
-                    </li>
-                     <li class="ml-auto">
-                    <% 
-                        String username = (String) session.getAttribute("authenticatedUser");
-                        if (username != null) {
-                    %>
-                        <a href="customer.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Welcome back, <%= username %></a>
-                    <% } %>
                 </li>
                 </ul>
             </div>
