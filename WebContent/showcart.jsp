@@ -9,134 +9,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Shopping Cart</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7fc;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1, h2 {
-            color: #3b4a67;
-            text-align: center;
-        }
-		header h2 {
-    color: white;
-}
-
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        table {
-            width: 100%;
-            margin: 20px 0;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #3b4a67;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        td input[type="number"] {
-            width: 50px;
-            padding: 5px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        td button {
-            padding: 6px 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        td button:hover {
-            background-color: #45a049;
-        }
-
-        .total-row {
-            font-weight: bold;
-            background-color: #f0f0f0;
-        }
-
-        .checkout-btn {
-            display: block;
-            width: 200px;
-            margin: 30px auto;
-            padding: 10px;
-            text-align: center;
-            background-color: #28a745;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        .checkout-btn:hover {
-            background-color: #218838;
-        }
-
-        .continue-shopping {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .continue-shopping a {
-            color: #007bff;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        .continue-shopping a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title >Your Shopping Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-gray-100 ">
 
-<header>
-    <div style="text-align: center; padding: 20px; background-color: #3b4a67; color: white;">
-        <h2>Welcome to Soumil's Grocery Store</h2>
-        <nav>
-            <a href="listprod.jsp" style="margin: 10px; color: white; text-decoration: none;">Products</a>
-            <a href="listorder.jsp" style="margin: 10px; color: white; text-decoration: none;">Order List</a>
-            <a href="showcart.jsp" style="margin: 10px; color: white; text-decoration: none;">Shopping Cart</a>
-        </nav>
+<nav class="bg-gray-900 border-gray-200">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a href="http://localhost/shop/index.jsp" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">UBCampusMart</span>
+        </a>
+        <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+            <span class="sr-only">Open main menu</span>
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+        </button>
+        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-900 dark:border-gray-700">
+                <!-- Other menu items -->
+                <li>
+                    <a href="listprod.jsp" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-400 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Products</a>
+                </li>
+                <li>
+                    <a href="listorder.jsp" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-400 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Order History</a>
+                </li>
+                <li>
+                    <a href="showcart.jsp" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-400 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Shopping Cart</a>
+                </li>
+                <li class="ml-auto">
+                    <% 
+                        String username = (String) session.getAttribute("authenticatedUser");
+                        if (username != null) {
+                    %>
+                        <a href="customer.jsp" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-400 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Welcome back, <%= username %></a>
+                    <% } %>
+                </li>
+            </ul>
+        </div>
     </div>
-</header>
+</nav>
+
+
+
 
 <%
 // Get the current list of products
@@ -150,17 +65,17 @@ if (productList == null) {
     NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 %>
 
-<div class="container">
-    <h1>Your Shopping Cart</h1>
-    <table>
+<div class="container mx-auto bg-white p-8 shadow-lg rounded-lg mt-8">
+    <h1 class="text-3xl text-center mb-6 font-bold">Your Shopping Cart</h1>
+    <table class="min-w-full table-auto">
         <thead>
-            <tr>
-                <th>Product Id</th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Subtotal</th>
-                <th>Action</th>
+            <tr class="bg-gray-900 text-white">
+                <th class="px-4 py-2 text-left">Product Id</th>
+                <th class="px-4 py-2 text-left">Product Name</th>
+                <th class="px-4 py-2 text-center">Quantity</th>
+                <th class="px-4 py-2 text-right">Price</th>
+                <th class="px-4 py-2 text-right">Subtotal</th>
+                <th class="px-4 py-2">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -180,22 +95,22 @@ if (productList == null) {
                 double price = Double.parseDouble(product.get(2).toString());
                 int quantity = Integer.parseInt(product.get(3).toString());
             %>
-            <tr>
-                <td><%= productId %></td>
-                <td><%= productName %></td>
-                <td align="center">
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2"><%= productId %></td>
+                <td class="px-4 py-2"><%= productName %></td>
+                <td class="px-4 py-2 text-center">
                     <form method="post" action="updateCart.jsp">
                         <input type="hidden" name="productId" value="<%= productId %>">
-                        <input type="number" name="quantity" value="<%= quantity %>" min="1">
-                        <button type="submit">Update</button>
+                        <input type="number" name="quantity" value="<%= quantity %>" min="1" class="w-16 px-2 py-1 border border-gray-300 rounded-md text-center">
+                        <button type="submit" class="mt-1 px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-800">Update</button>
                     </form>
                 </td>
-                <td align="right"><%= currFormat.format(price) %></td>
-                <td align="right"><%= currFormat.format(price * quantity) %></td>
-                <td>
+                <td class="px-4 py-2 text-right"><%= currFormat.format(price) %></td>
+                <td class="px-4 py-2 text-right"><%= currFormat.format(price * quantity) %></td>
+                <td class="px-4 py-2">
                     <form method="post" action="deleteFromCart.jsp">
                         <input type="hidden" name="productId" value="<%= productId %>">
-                        <button type="submit">Delete</button>
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -203,19 +118,20 @@ if (productList == null) {
                 total += price * quantity;
             }
             %>
-            <tr class="total-row">
-                <td colspan="4" align="right">Order Total</td>
-                <td align="right"><%= currFormat.format(total) %></td>
+            <tr class="bg-gray-100 font-bold">
+                <td colspan="4" class="px-4 py-2 text-right">Order Total</td>
+                <td class="px-4 py-2 text-right"><%= currFormat.format(total) %></td>
                 <td></td>
             </tr>
         </tbody>
     </table>
 
-    <a href="checkout.jsp" class="checkout-btn">Check Out</a>
+    <a href="checkout.jsp" class="block mt-6 text-center py-2 px-6 bg-green-700 text-white rounded-md hover:bg-green-800 w-auto">Check Out</a>
+
 </div>
 
-<div class="continue-shopping">
-    <h2><a href="listprod.jsp">Continue Shopping</a></h2>
+<div class="text-center mt-8">
+    <h2><a href="listprod.jsp" class="text-blue-500 hover:underline text-lg">Continue Shopping</a></h2>
 </div>
 
 <% } %>
