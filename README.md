@@ -25,11 +25,14 @@ UBCampusMart is an e-commerce platform designed for UBC students to buy and sell
     docker-compose up -d
 3. **Start the server**
     ```bash
-    localhost/shop/index.jsp
+    localhost/shop/
  Enjoy Shopping 🛍️
 ## Contributors
 - Arhaan Khaku 
 - Soumil Chhabra
+
+## Documentation 
+A documentation has been provided for developers and users - see [Documentation](Documentation.pdf) file for details.
 
 ## License  
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
