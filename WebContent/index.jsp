@@ -221,7 +221,7 @@
 
 <!-- Begin Shopping Button Section -->
 <div class="ml-20 mt-[-120px] mb-20">
-    <a href="listprod.jsp" class="bg-sky-400 text-white font-semibold py-3 px-6 rounded-md hover:bg-sky-500 transition duration-300">
+    <a href="login.jsp" class="bg-sky-400 text-white font-semibold py-3 px-6 rounded-md hover:bg-sky-500 transition duration-300">
         Begin Shopping
     </a>
 </div>
@@ -236,7 +236,7 @@
     </div>
 </div>
 
-  <!-- Best Selling Products Section -->
+  <%-- <!-- Best Selling Products Section -->
     <div class="best-sellers">
         <h2 class="text-3xl text-gray-900 font-semibold">Best Selling Products</h2>
         <div class="flex flex-wrap justify-center">
@@ -274,7 +274,7 @@
                 }
             %>
         </div>
-    </div>
+    </div> --%>
 
 
 
