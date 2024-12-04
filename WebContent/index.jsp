@@ -9,6 +9,13 @@
     <!-- Font Awesome CDN -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        body {
+            background-image: url('bg.jpg');
+            background-attachment: scroll; /* Allows the background to scroll */
+            background-size: cover; /* Ensures the image covers the viewport */
+            background-repeat: no-repeat; /* Prevents tiling */
+        }
+
         /* Keyframes for typewriter effect */
         @keyframes typing {
             0% {
@@ -17,6 +24,31 @@
             100% {
                 width: 100%;
             }
+        }
+
+
+
+        /* Change navbar background color */
+        nav {
+            background-color: #090b2b; /* Dark blue color */
+        }
+
+        /* Ensure all text on the navbar is white */
+        nav a,
+        nav button,
+        nav span {
+            color: white !important; /* Overrides any existing color */
+        }
+
+        /* Change all black text to white */
+        .text-gray-900 {
+            color: white !important;
+        }
+
+        /* Optional: Hover effects */
+        nav a:hover,
+        nav button:hover {
+            color: #CCCCCC; /* Light gray for hover effect */
         }
 
         /* Apply the typing effect to the element */
@@ -38,12 +70,33 @@
         .animate-typing {
             animation: typing 3s steps(30) 1s 1 normal both, blink 0.75s step-end infinite;
         }
+
+        /* Style for the image and quote section */
+        .content-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .quote {
+            color: skyblue;
+            font-size: 1.5rem;
+            font-style: italic;
+            max-width: 500px;
+        }
+
+        .image {
+            max-width: 400px;
+            max-height: 400px;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans m-0 p-0">
 
     <!-- Navbar -->
-    <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <nav class="border-gray-200">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="http://localhost/shop/index.jsp" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">UBCampusMart</span>
@@ -56,9 +109,7 @@
             </button>
             <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                 <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                    <!-- Other menu items -->
                     <li>
-                        <!-- Begin Shopping button with dynamic href -->
                         <%
                             String firstName = (String) session.getAttribute("authenticatedUser"); 
                             boolean isLoggedIn = (firstName != null && !firstName.isEmpty());
@@ -67,9 +118,6 @@
                             Begin Shopping
                         </a>
                     </li>
-                    <%-- <li>
-                        <a href="listorder.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">List Orders</a>
-                    </li> --%>
                     <li>
                         <a href="admin.jsp" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Administrators</a>
                     </li>
@@ -95,6 +143,7 @@
                             </div>
                         </div>
                     </li>
+
                 </ul>
             </div>
         </div>
@@ -109,6 +158,38 @@
             <% } %>
         </h1>
     </div>
+<div class="content-container flex justify-between items-center mt-8 px-8">
+    <!-- Quote Section (Left) -->
+    <div class="quote w-1/2 text-left text-4xl text-sky-400 font-semibold ml-10">
+        "UBCampus Mart: A Marketplace for Students, by Students—Safe, Simple, and Student-Centered!"
+    </div>
+    
+    <!-- Image Section (Right) -->
+    <img src="download.png" alt="UBCampusMart" class="w-2/4 md:w-2/5 mr-16"/>
+</div>
+
+<!-- Begin Shopping Button Section -->
+<div class="ml-20 mt-[-120px] mb-20">
+    <a href="listprod.jsp" class="bg-sky-400 text-white font-semibold py-3 px-6 rounded-md hover:bg-sky-500 transition duration-300">
+        Begin Shopping
+    </a>
+</div>
+
+
+<div class="about-us mt-72 px-8 py-16 flex justify-end mb-20">
+    <div class="text-right">
+        <h2 class="text-4xl text-sky-400 font-semibold mb-6">About Us</h2>
+        <p class="text-2xl text-gray-300 max-w-3xl mx-auto">
+            "UBCampus Mart is the marketplace designed specifically for UBC students, by UBC students. We aim to create a trusted space where students can buy, sell, and trade items with ease, knowing they are dealing with their peers. Whether it’s textbooks, electronics, or furniture, UBCampus Mart is built to foster safe, secure, and straightforward transactions within the UBC community. With verified student accounts, secure messaging, and an easy-to-use interface, we prioritize the safety and convenience of every transaction, making it the go-to marketplace for UBC students."
+        </p>
+    </div>
+</div>
+
+<!-- Footer -->
+    <footer class="bg text-white text-center py-4">
+        &copy; 2024 UBCampusMart. All rights reserved.
+    </footer>
+
 
     <script>
         // JavaScript to toggle dropdown visibility

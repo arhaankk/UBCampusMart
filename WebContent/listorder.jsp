@@ -127,8 +127,9 @@
 %>
 
 </div>
-
-<a href="checkout.jsp" class="block mx-auto mt-10 w-64 text-center py-2 px-4 bg-green-600 text-white text-lg font-semibold rounded-md hover:bg-green-700">Proceed to Checkout</a>
-
+<!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-4">
+        &copy; 2024 UBCampusMart. All rights reserved.
+    </footer>
 </body>
 </html>

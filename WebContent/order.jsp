@@ -230,6 +230,9 @@ out.println("</div>");
         }
     }
 %>
-
+<!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-4">
+        &copy; 2024 UBCampusMart. All rights reserved.
+    </footer>
 </body>
 </html>
