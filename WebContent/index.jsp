@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ include file="jdbc.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,6 +91,46 @@
         .image {
             max-width: 400px;
             max-height: 400px;
+        }
+
+        .best-sellers {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .product-card {
+            display: inline-block;
+            width: 250px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .product-price {
+            color: #4CAF50;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        .product-quantity {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -193,6 +234,49 @@
         </p>
     </div>
 </div>
+
+  <!-- Best Selling Products Section -->
+    <div class="best-sellers">
+        <h2 class="text-3xl text-gray-900 font-semibold">Best Selling Products</h2>
+        <div class="flex flex-wrap justify-center">
+            <%
+                // Query the top selling products
+                String query = "SELECT p.productId, p.productName, p.price, SUM(od.quantity) AS totalSold " +
+                               "FROM product p " +
+                               "JOIN orderproduct od ON p.productId = od.productId " +
+                               "GROUP BY p.productId, p.productName, p.price " +
+                               "ORDER BY totalSold DESC LIMIT 5"; 
+                try {
+                    Connection conn = DriverManager.getConnection(url,uid,pw);
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+                    
+                    while (rs.next()) {
+                        String productName = rs.getString("productName");
+                        double price = rs.getDouble("price");
+                        int totalSold = rs.getInt("totalSold");
+                        // Fetching image and other product details can be added here if required
+            %>
+                <div class="product-card">
+                    <img src="path_to_image" alt="<%= productName %>">
+                    <div class="product-name"><%= productName %></div>
+                    <div class="product-price">$<%= price %></div>
+                    <div class="product-quantity"><%= totalSold %> Sold</div>
+                </div>
+            <%
+                    }
+                    rs.close();
+                    stmt.close();
+                    conn.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            %>
+        </div>
+    </div>
+
+
+
 
 <!-- Footer -->
     <footer class="bg text-white text-center py-4">
