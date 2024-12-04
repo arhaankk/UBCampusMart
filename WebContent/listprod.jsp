@@ -86,9 +86,8 @@
         </div>
     </form>
 
-   <!-- Product List -->
 <!-- Product List -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
     <% 
         String name = request.getParameter("productName");
         String categoryId = request.getParameter("categoryId");
@@ -121,25 +120,24 @@
                         String addToCartLink = "addcart.jsp?id=" + productId + "&name=" + URLEncoder.encode(productName, "UTF-8") + "&price=" + productPrice;
 
                         String imageTag = (productImage != null && productImage.length > 0)
-                            ? "<img src='data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(productImage) + "' alt='" + productName + "' class='w-full h-64 object-cover rounded-lg'>"
+                            ? "<img src='data:image/jpeg;base64," + java.util.Base64.getEncoder().encodeToString(productImage) + "' alt='" + productName + "' class='w-full h-48 object-cover rounded-lg'>"
                             : (productImageURL != null && !productImageURL.isEmpty())
-                                ? "<img src='" + productImageURL + "' alt='" + productName + "' class='w-full h-64 object-cover rounded-lg'>"
-                                : "<img src='images/default.jpg' alt='Default Image' class='w-full h-64 object-cover rounded-lg'>";
+                                ? "<img src='" + productImageURL + "' alt='" + productName + "' class='w-full h-48 object-cover rounded-lg'>"
+                                : "<img src='images/default.jpg' alt='Default Image' class='w-full h-48 object-cover rounded-lg'>";
 
                         String formattedPrice = currFormat.format(productPrice);
                         String productLink = "product.jsp?id=" + productId;
 
+                        out.println("<div class='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col'>");
                         out.println("<a href='" + productLink + "' class='group block'>");
-                        out.println("<div class='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full'>");
                         out.println(imageTag);
-                        out.println("<div class='p-4 flex-grow'>");
+                        out.println("</a>");
+                        out.println("<div class='p-4'>");
                         out.println("<h3 class='text-lg font-medium text-gray-900'>" + productName + "</h3>");
                         out.println("<p class='text-xl font-semibold text-gray-700'>" + formattedPrice + "</p>");
-                        // Enhanced Add to Cart Button
                         out.println("<a href='" + addToCartLink + "' class='bg-blue-500 text-white px-4 py-2 mt-4 inline-block rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-200'>Add to Cart</a>");
                         out.println("</div>");
                         out.println("</div>");
-                        out.println("</a>");
                     } while (rs.next());
                 }
             }
